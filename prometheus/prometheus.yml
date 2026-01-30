@@ -1,4 +1,7 @@
 # my global config
+# NOTE: Ports should match .env configuration
+# PROMETHEUS_PORT=9090, NODE_EXPORTER_PORT=9100, CADVISOR_PORT=9110
+# APP_HTTP_PORT=8080, HAPROXY_STATS_PORT=8405
 global:
   scrape_interval:     15s # By default, scrape targets every 15 seconds.
   evaluation_interval: 15s # By default, scrape targets every 15 seconds.
