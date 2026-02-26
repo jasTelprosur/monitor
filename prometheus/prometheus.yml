@@ -41,6 +41,11 @@ scrape_configs:
       - targets: ['mosquitto-exporter:9234']
         labels:
           alias: mqtt
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: 'mosquitto-exporter:9234'
+        target_label: instance
+        replacement: 'local-mqtt'
 
   - job_name: 'asterisk'
     metrics_path: asterisk/metrics
@@ -48,28 +53,53 @@ scrape_configs:
       - targets: ['asterisk:8088']
         labels:
           alias: asterisk
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: 'asterisk:8088'
+        target_label: instance
+        replacement: 'local-asterisk'
 
   - job_name: 'haproxy'
     static_configs:
       - targets: ["haproxy:8405"]
         labels:
           alias: proxy
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: 'haproxy:8405'
+        target_label: instance
+        replacement: 'local-proxy'
 
   - job_name: 'node'
     static_configs:
       - targets: [ 'node-exporter:9100' ]
         labels:
-          alias: host
+          alias: app
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: 'node-exporter:9100'
+        target_label: instance
+        replacement: 'local-host'
 
   - job_name: 'cadvisor'
     static_configs:
       - targets: ["cadvisor:9110"]
         labels:
           alias: docker
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: 'cadvisor:9110'
+        target_label: instance
+        replacement: 'local-host'
 
   - job_name: 'app'
-    metrics_path: metrics
+    metrics_path: prometheus
     static_configs:
       - targets: [ "app:8080" ]
         labels:
           alias: app
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: 'app:8080'
+        target_label: instance
+        replacement: 'local-app'

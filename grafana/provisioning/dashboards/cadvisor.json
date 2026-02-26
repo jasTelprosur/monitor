@@ -1,54 +1,12 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_PROMETHEUS",
-      "label": "Prometheus",
-      "description": "Prometheus is used for data collection from cAdvisor",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    }
-  ],
   "__elements": {},
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "10.2.0"
-    },
-    {
-      "type": "panel",
-      "id": "heatmap",
-      "name": "Heatmap",
-      "version": ""
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "stat",
-      "name": "Stat",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
         "builtIn": 1,
         "datasource": {
-          "type": "grafana",
-          "uid": "-- Grafana --"
+          "type": "prometheus",
+          "uid": "prometheus"
         },
         "enable": true,
         "hide": true,
@@ -79,10 +37,6 @@
       "type": "row"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid":  null
-      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -131,10 +85,10 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid":  null
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "count(count(container_last_seen) by (name))",
+          "expr": "count(container_last_seen{id=~\".*docker.*[0-9a-f]{12,}.*\"})",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -145,10 +99,6 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid":  null
-      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -231,11 +181,11 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid":  null
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(container_cpu_usage_seconds_total{name=~\".+\"}[10m])) by (name) * 100",
-          "legendFormat": "__auto",
+          "expr": "label_replace(sum(rate(container_cpu_usage_seconds_total{id=~\".*docker.*[0-9a-f]{12,}.*\"}[10m])) by (name, id, instance) * 100, \"short_id\", \"$1\", \"id\", \".*(?:docker-|/docker/)([a-f0-9]{12}).*\")",
+          "legendFormat": "{{name}} {{short_id}} @ {{instance}}",
           "range": true,
           "refId": "A"
         }
@@ -257,10 +207,6 @@
       "type": "row"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid":  null
-      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -340,12 +286,12 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid":  null
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(container_memory_usage_bytes{name=~\".+\"}[10m])) by (name)",
+          "expr": "label_replace(sum(container_memory_usage_bytes{id=~\".*docker.*[0-9a-f]{12,}.*\"}) by (name, id, instance), \"short_id\", \"$1\", \"id\", \".*(?:docker-|/docker/)([a-f0-9]{12}).*\")",
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{name}} {{short_id}} @ {{instance}}",
           "range": true,
           "refId": "A"
         }
@@ -354,10 +300,6 @@
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid":  null
-      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -437,12 +379,12 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid":  null
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(container_memory_cache{name=~\".+\"}[10m])) by (name)",
+          "expr": "label_replace(sum(container_memory_cache{id=~\".*docker.*[0-9a-f]{12,}.*\"}) by (name, id, instance), \"short_id\", \"$1\", \"id\", \".*(?:docker-|/docker/)([a-f0-9]{12}).*\")",
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{name}} {{short_id}} @ {{instance}}",
           "range": true,
           "refId": "A"
         }
@@ -464,10 +406,6 @@
       "type": "row"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid":  null
-      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -550,12 +488,12 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid":  null
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(container_fs_reads_bytes_total{name=~\".+\"}[10m])) by (name)",
+          "expr": "label_replace(sum(rate(container_fs_reads_bytes_total{id=~\".*docker.*[0-9a-f]{12,}.*\"}[10m])) by (name, id, instance), \"short_id\", \"$1\", \"id\", \".*(?:docker-|/docker/)([a-f0-9]{12}).*\")",
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{name}} {{short_id}} @ {{instance}}",
           "range": true,
           "refId": "A"
         }
@@ -564,10 +502,6 @@
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid":  null
-      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -650,12 +584,12 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid":  null
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(container_fs_writes_bytes_total{name=~\".+\"}[10m])) by (name)",
+          "expr": "label_replace(sum(rate(container_fs_writes_bytes_total{id=~\".*docker.*[0-9a-f]{12,}.*\"}[10m])) by (name, id, instance), \"short_id\", \"$1\", \"id\", \".*(?:docker-|/docker/)([a-f0-9]{12}).*\")",
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{name}} {{short_id}} @ {{instance}}",
           "range": true,
           "refId": "A"
         }
@@ -677,10 +611,6 @@
       "type": "row"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid":  null
-      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -763,12 +693,12 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid":  null
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(container_network_receive_bytes_total{name=~\".+\"}[10m])) by (name)",
+          "expr": "label_replace(sum(rate(container_network_receive_bytes_total{id=~\".*docker.*[0-9a-f]{12,}.*\"}[10m])) by (name, id, instance), \"short_id\", \"$1\", \"id\", \".*(?:docker-|/docker/)([a-f0-9]{12}).*\")",
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{name}} {{short_id}} @ {{instance}}",
           "range": true,
           "refId": "A"
         }
@@ -777,10 +707,6 @@
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid":  null
-      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -863,12 +789,12 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid":  null
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(container_network_transmit_bytes_total{name=~\".+\"}[10m])) by (name)",
+          "expr": "label_replace(sum(rate(container_network_transmit_bytes_total{id=~\".*docker.*[0-9a-f]{12,}.*\"}[10m])) by (name, id, instance), \"short_id\", \"$1\", \"id\", \".*(?:docker-|/docker/)([a-f0-9]{12}).*\")",
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{name}} {{short_id}} @ {{instance}}",
           "range": true,
           "refId": "A"
         }
@@ -890,10 +816,6 @@
       "type": "row"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid":  null
-      },
       "fieldConfig": {
         "defaults": {
           "custom": {
@@ -933,7 +855,7 @@
           "color": "rgba(255,0,255,0.7)"
         },
         "filterValues": {
-          "le": 1e-9
+          "le": 1e-09
         },
         "legend": {
           "show": true
@@ -956,12 +878,12 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid":  null
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "count by(name) (count_over_time(container_last_seen{name=~\".+\"}[$__range]))",
+          "expr": "label_replace(count by(name, instance) (count_over_time(container_last_seen{name=~\".+\"}[$__range])), \"short_id\", \"$1\", \"id\", \".*(?:docker-|/docker/)([a-f0-9]{12}).*\")",
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{name}} {{short_id}} @ {{instance}}",
           "range": true,
           "refId": "A"
         }
@@ -982,10 +904,10 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "cAdvisor Docker Insights",
-  "uid": "ae3c41d7-cea5-4cca-a918-5708706b4d1a",
+  "title": "Docker Por Instancia",
   "version": 14,
   "weekStart": "",
   "gnetId": 19908,
-  "description": "This Grafana dashboard offers a basic overview of key performance metrics for Docker containers in your system."
+  "description": "This Grafana dashboard offers a basic overview of key performance metrics for Docker containers in your system.",
+  "uid": "ae3c41d7-cea5-4cca-a918-5708706b4d1a"
 }
